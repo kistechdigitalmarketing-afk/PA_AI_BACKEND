@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  ai-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-task-analyzer
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    volumes:
+      # Mount model files if you want to update them without rebuilding
+      - ./app/staff_model.pkl:/app/app/staff_model.pkl
+      - ./app/supervisor_model.pkl:/app/app/supervisor_model.pkl
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

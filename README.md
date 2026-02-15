@@ -2,7 +2,7 @@
 
 A machine learning-powered API that analyzes task performance data to provide efficiency scores, risk assessments, and AI-generated coaching feedback for staff and supervisors.
 
-## 🎯 What It Does
+## What It Does
 
 This backend service analyzes task performance patterns using ML models and provides:
 
@@ -14,17 +14,6 @@ This backend service analyzes task performance patterns using ML models and prov
   - **Staff**: Completion rate, overdue rate, worklog consistency
   - **Supervisors**: Additional metrics for approval speed and rejection rates
 
-## 🚀 Features
-
-- ✅ ML-powered pattern detection using IsolationForest
-- ✅ Dynamic efficiency scoring (combines ML predictions with behavioral metrics)
-- ✅ Risk level classification (Low/Medium/High)
-- ✅ AI-generated personalized feedback using FLAN-T5
-- ✅ Statistical breakdown (completion %, overdue %, approval speed, etc.)
-- ✅ Role-based analysis (staff vs supervisor metrics)
-- ✅ RESTful API with FastAPI
-- ✅ Automatic CORS handling
-- ✅ Production-ready deployment configuration
 
 ## 🛠️ Technologies Used
 
@@ -40,7 +29,7 @@ This backend service analyzes task performance patterns using ML models and prov
 
 - Python 3.11 or higher
 - pip (Python package manager)
-- Git (for cloning the repository)
+
 
 ## 🔧 Installation & Setup
 
@@ -71,7 +60,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Note**: Installing PyTorch and transformers may take a few minutes as these are large packages.
 
 ### 4. Verify Model Files
 
@@ -101,6 +89,51 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 **Note**: On first startup, the FLAN-T5 model will be downloaded and loaded into memory. This takes 30-60 seconds and requires ~500MB RAM.
+
+### Docker Deployment (Recommended)
+
+Docker makes deployment easier and ensures consistent environments across different platforms.
+
+#### Using Docker Compose (Easiest)
+
+```bash
+# Build and run the container
+docker-compose up --build
+
+# Run in detached mode (background)
+docker-compose up -d --build
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+```
+
+The API will be available at:
+- **API**: http://localhost:8000
+- **Interactive Docs**: http://localhost:8000/docs
+
+#### Using Docker directly
+
+```bash
+# Build the Docker image
+docker build -t ai-task-analyzer .
+
+# Run the container
+docker run -p 8000:8000 ai-task-analyzer
+
+# Run in detached mode with custom port
+docker run -d -p 8080:8000 --name ai-backend ai-task-analyzer
+```
+
+#### Docker Benefits
+
+- ✅ Consistent environment across development, staging, and production
+- ✅ Easy deployment to any Docker-compatible platform (Railway, AWS, GCP, Azure, etc.)
+- ✅ Isolated dependencies - no conflicts with system Python
+- ✅ Reproducible builds
+- ✅ Easy scaling with container orchestration
 
 ## 📡 API Endpoints
 
@@ -162,29 +195,7 @@ A task is considered overdue if:
 - Status is `"planned"` or `"in progress"`
 - Status is NOT `"in review"`
 
-## 📁 Project Structure
 
-```
-ai_backend/
-├── app/
-│   ├── __init__.py
-│   ├── main.py                 # FastAPI application entry point
-│   ├── models.py               # Pydantic data models
-│   ├── staff_model.pkl         # Trained staff performance model
-│   ├── supervisor_model.pkl   # Trained supervisor performance model
-│   └── services/
-│       ├── __init__.py
-│       ├── analyzer.py         # ML analysis and scoring logic
-│       └── generator.py        # FLAN-T5 feedback generation
-├── train_model.py              # Script to train ML models
-├── inspect_model.py            # Model inspection utilities
-├── tasks_export.xlsx           # Training data (Excel file)
-├── requirements.txt            # Python dependencies
-├── Procfile                    # Railway/Render deployment config
-├── railway.json                # Railway-specific config
-├── runtime.txt                 # Python version specification
-└── README.md                   # This file
-```
 
 ## 🤖 Training Models
 
@@ -203,22 +214,7 @@ This will generate:
 - `app/staff_model.pkl` - Staff performance anomaly detection model
 - `app/supervisor_model.pkl` - Supervisor performance anomaly detection model
 
-## 🚢 Deployment
 
-### Railway (Recommended)
-
-1. Push code to GitHub
-2. Go to [railway.app](https://railway.app)
-3. Create new project → Deploy from GitHub
-4. Select your repository
-5. Railway auto-detects configuration and deploys
-
-### Other Platforms
-
-See deployment configuration files:
-- `Procfile` - For Railway/Render
-- `railway.json` - Railway-specific settings
-- `requirements.txt` - Dependencies
 
 **Memory Requirements:**
 - Minimum: 2GB RAM (for FLAN-T5 model)
@@ -271,23 +267,5 @@ curl -X POST http://localhost:8000/analyze \
 - The FLAN-T5 model is loaded on server startup and kept in memory
 - First API call may be slower due to model initialization
 - Model files (`.pkl`) should be committed to the repository
-- CORS is currently set to allow all origins (`*`) - update for production
+- CORS is currently set to allow all origins (`*`) 
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📄 License
-
-[Add your license information here]
-
-## 👤 Author
-
-[Your name/team]
-
----
-
-For questions or issues, please open an issue on GitHub.
