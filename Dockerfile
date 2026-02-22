@@ -35,4 +35,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # Run the application
 # Use PORT environment variable if provided (for Railway, etc.), otherwise default to 8000
 ENV PORT=8000
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn performance_backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
