@@ -28,9 +28,9 @@ COPY . .
 # Expose port (default FastAPI port, can be overridden)
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs').read()" || exit 1
+# Health check - increased start-period for model loading (120s)
+HEALTHCHECK --interval=30s --timeout=30s --start-period=120s --retries=5 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/').read()" || exit 1
 
 # Run the application
 # Use PORT environment variable if provided (for Railway, etc.), otherwise default to 8000

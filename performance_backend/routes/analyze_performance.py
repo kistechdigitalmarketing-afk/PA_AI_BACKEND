@@ -132,18 +132,18 @@ def generate_feedback(data: PerformanceRequest, trend: str, patterns: List[str],
     
     data_analysis += pattern_sentences.get(primary_pattern, "")
     
-    # SECTION 3 — supportive_interpretation
+    # SECTION 3 — supportive_interpretation (empathetic, not action items)
     fallback_map = {
-        "rushing": "Slowing down slightly before submitting and doing a quick self-check can bring quality back up quickly.",
-        "quality_decline": "Quality dips often reflect external pressure or unclear requirements — a sync with your supervisor can help clarify expectations.",
-        "planning_issue": "Flagging at-risk tasks by Wednesday gives buffer time to act before the overdue deadline hits.",
-        "performance_instability": "When all areas dip together it usually reflects a difficult period — steady daily habits rebuild scores fast.",
-        "inconsistent_sprinter": "Your output capacity is clearly there — spreading energy more evenly across the week will improve your consistency score.",
-        "high_performer": "Sustaining this level comes from keeping the daily habits that got you here.",
-        "balanced": "Pick the lowest bucket and target a 5-point improvement next week."
+        "rushing": "It looks like you're working hard to get things done quickly — that drive is valuable. A small adjustment to pace could help your quality scores catch up to your productivity.",
+        "quality_decline": "Quality dips can happen when workload increases or requirements aren't clear. This is a recoverable situation with some focused attention.",
+        "planning_issue": "Overdue tasks often signal competing priorities or unexpected blockers rather than lack of effort. Recognizing this pattern early is the first step to addressing it.",
+        "performance_instability": "When multiple metrics dip at once, it often reflects a challenging period rather than a capability issue. Small, consistent daily efforts can turn this around quickly.",
+        "inconsistent_sprinter": "Your ability to produce strong output is clear from your productivity numbers. The opportunity here is channeling that energy more evenly throughout the week.",
+        "high_performer": "This is excellent, well-rounded performance. The habits and discipline that got you here are clearly working.",
+        "balanced": "Your metrics are reasonably balanced across all areas. There's a solid foundation here to build on."
     }
     
-    fallback = fallback_map.get(primary_pattern, "Focus on steady improvement across all dimensions.")
+    fallback = fallback_map.get(primary_pattern, "Every week is a fresh opportunity to build momentum. Small improvements compound over time.")
     
     # Build prompt for FLAN
     pattern_display = primary_pattern.replace("_", " ")
