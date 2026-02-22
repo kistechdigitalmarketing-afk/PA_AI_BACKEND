@@ -15,6 +15,12 @@ services:
       - ./app/staff_model.pkl:/app/app/staff_model.pkl
       - ./app/supervisor_model.pkl:/app/app/supervisor_model.pkl
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G  # Ensure enough RAM for FLAN-T5 model (~2GB) + overhead
+        reservations:
+          memory: 2G  # Reserve minimum memory
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs').read()"]
       interval: 30s

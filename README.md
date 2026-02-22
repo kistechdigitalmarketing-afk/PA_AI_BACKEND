@@ -1,271 +1,178 @@
-# AI Task Performance Analyzer Backend
+# Performance Analysis Backend
 
-A machine learning-powered API that analyzes task performance data to provide efficiency scores, risk assessments, and AI-generated coaching feedback for staff and supervisors.
+An AI-powered employee performance feedback system that analyzes work metrics and generates personalized coaching feedback using Google's FLAN-T5 language model.
 
-## What It Does
+## What This Does
 
-This backend service analyzes task performance patterns using ML models and provides:
+Takes raw performance data (productivity, quality, consistency, overdue rate) and generates:
 
-- **Pattern Detection**: Uses IsolationForest ML models to identify anomaly patterns in task completion behavior
-- **Efficiency Scoring**: Calculates a 0-100 efficiency score based on completion rates, overdue tasks, and worklog activity
-- **Risk Assessment**: Determines Low/Medium/High risk levels based on performance patterns
-- **AI Feedback**: Generates personalized coaching feedback using Google's FLAN-T5 language model
-- **Role-Specific Analysis**: Different metrics for staff members vs supervisors/admins
-  - **Staff**: Completion rate, overdue rate, worklog consistency
-  - **Supervisors**: Additional metrics for approval speed and rejection rates
+| Output | Description |
+|--------|-------------|
+| **Trend** | `Improving` / `Stable` / `Declining` based on score change |
+| **Risk State** | `Improving` / `Stable` / `Needs Attention` |
+| **Patterns** | Detected issues like `rushing`, `quality_decline`, `planning_issue` |
+| **Professional Summary** | Overall assessment based on performance band |
+| **Data Analysis** | Breakdown of metrics with pattern insights |
+| **Supportive Interpretation** | AI-generated coaching sentence (FLAN-T5) |
+| **Actionable Suggestions** | Specific steps to improve |
 
+## Architecture
 
-## 🛠️ Technologies Used
-
-- **FastAPI** - Modern Python web framework
-- **scikit-learn** - ML models (IsolationForest for anomaly detection)
-- **transformers** - Hugging Face transformers (FLAN-T5 model)
-- **PyTorch** - Deep learning framework
-- **pandas** - Data manipulation and analysis
-- **joblib** - Model serialization
-- **Pydantic** - Data validation
-
-## 📋 Prerequisites
-
-- Python 3.11 or higher
-- pip (Python package manager)
-
-
-## 🔧 Installation & Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/kistechdigitalmarketing-afk/PA_AI_BACKEND.git
-cd PA_AI_BACKEND
+```
+FastAPI Server (main.py)
+    |
+    +-- /analyze-performance endpoint
+    |       |
+    |       +-- detect_trend()      -> Improving | Declining | Stable
+    |       +-- detect_patterns()   -> [rushing, quality_decline, etc.]
+    |       +-- assign_risk_state() -> Improving | Stable | Needs Attention
+    |       +-- generate_feedback() -> 4 feedback sections
+    |
+    +-- generator.py (FLAN-T5 model)
+            +-- generate_flan_sentence() -> AI-generated coaching text
 ```
 
-### 2. Create Virtual Environment
+### Hybrid Approach
 
-**Windows:**
+- **Deterministic rules** for trend/pattern/risk detection (predictable, fast)
+- **AI generation** only for the supportive coaching sentence (adds human touch)
+- **Fallback text** if AI output fails quality checks
+
+## Quick Start
+
+### 1. Install dependencies
 ```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-**macOS/Linux:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
-
-```bash
+cd performance_backend
 pip install -r requirements.txt
 ```
 
-
-### 4. Verify Model Files
-
-Ensure the following model files exist in the `app/` directory:
-- `app/staff_model.pkl` - Staff performance ML model
-- `app/supervisor_model.pkl` - Supervisor performance ML model
-
-If these files are missing, you'll need to train the models first (see [Training Models](#training-models) section).
-
-## 🏃 Running the Application
-
-### Development Mode
-
+### 2. Run the server
 ```bash
-uvicorn app.main:app --reload
+python main.py
 ```
 
-The API will be available at:
-- **API**: http://localhost:8000
-- **Interactive Docs**: http://localhost:8000/docs
-- **Alternative Docs**: http://localhost:8000/redoc
-
-### Production Mode
-
+### 3. Test it
+Open http://localhost:8000/docs for Swagger UI, or run:
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+python test_endpoint.py
 ```
 
-**Note**: On first startup, the FLAN-T5 model will be downloaded and loaded into memory. This takes 30-60 seconds and requires ~500MB RAM.
+## API Reference
 
-### Docker Deployment (Recommended)
+### POST `/analyze-performance`
 
-Docker makes deployment easier and ensures consistent environments across different platforms.
-
-#### Using Docker Compose (Easiest)
-
-```bash
-# Build and run the container
-docker-compose up --build
-
-# Run in detached mode (background)
-docker-compose up -d --build
-
-# View logs
-docker-compose logs -f
-
-# Stop the container
-docker-compose down
-```
-
-The API will be available at:
-- **API**: http://localhost:8000
-- **Interactive Docs**: http://localhost:8000/docs
-
-#### Using Docker directly
-
-```bash
-# Build the Docker image
-docker build -t ai-task-analyzer .
-
-# Run the container
-docker run -p 8000:8000 ai-task-analyzer
-
-# Run in detached mode with custom port
-docker run -d -p 8080:8000 --name ai-backend ai-task-analyzer
-```
-
-#### Docker Benefits
-
-- ✅ Consistent environment across development, staging, and production
-- ✅ Easy deployment to any Docker-compatible platform (Railway, AWS, GCP, Azure, etc.)
-- ✅ Isolated dependencies - no conflicts with system Python
-- ✅ Reproducible builds
-- ✅ Easy scaling with container orchestration
-
-## 📡 API Endpoints
-
-### POST `/analyze`
-
-Analyzes task performance data and returns efficiency score, risk level, and AI feedback.
-
-**Request Body:**
+**Request:**
 ```json
 {
-  "user_id": "user123",
-  "user_role": "staff",
-  "tasks": [
-    {
-      "task_id": "task1",
-      "user_id": "user123",
-      "user_role": "staff",
-      "status": "completed",
-      "priority": 1,
-      "approval_status": "approved",
-      "working_count": 5,
-      "due_date": "2024-01-15T00:00:00.000Z",
-      "submitted_at": "2024-01-14T10:00:00.000Z",
-      "approved_at": "2024-01-14T12:00:00.000Z"
-    }
-  ]
+  "user_id": "string",
+  "current_score": 75.0,
+  "previous_score": 70.0,
+  "performance_band": "Good",
+  "weekly_history": [],
+  "productivity": 80.0,
+  "consistency": 65.0,
+  "quality": 70.0,
+  "overdue_rate": 15.0
 }
 ```
 
 **Response:**
 ```json
 {
-  "user_id": "user123",
-  "efficiency_score": 85,
-  "risk_level": "Low",
-  "feedback": "Your pattern demonstrates excellent time management...",
-  "stats": {
-    "completion_rate_pct": 95.0,
-    "overdue_rate_pct": 0.0,
-    "avg_working_logs": 4.5
-  }
+  "trend": "Improving",
+  "risk_state": "Improving",
+  "patterns": ["balanced"],
+  "professional_summary": "Solid performance at 75%...",
+  "data_analysis": "Productivity: 80% | Consistency: 65% | Quality: 70%...",
+  "supportive_interpretation": "AI-generated coaching sentence...",
+  "actionable_suggestions": "Maintain your current habits..."
 }
 ```
 
-**User Roles:**
-- `"staff"` - Regular staff member
-- `"supervisor"` - Supervisor role (includes approval metrics)
-- `"country_admin"` - Country admin role (includes approval metrics)
+### Field Descriptions
 
-**Task Status Values:**
-- `"planned"` - Task is planned
-- `"in progress"` - Task is in progress
-- `"in review"` - Task is under review
-- `"completed"` - Task is completed
+| Field | Type | Description |
+|-------|------|-------------|
+| `user_id` | string | Unique identifier for the employee |
+| `current_score` | float | This week's overall performance score (0-100) |
+| `previous_score` | float | Last week's score (optional, for trend detection) |
+| `performance_band` | string | `Excellent` / `Very Good` / `Good` / `Average` / `Needs Attention` |
+| `productivity` | float | Task completion rate (0-100) |
+| `consistency` | float | Daily worklog consistency (0-100) |
+| `quality` | float | Work quality score (0-100) |
+| `overdue_rate` | float | Percentage of tasks overdue (0-100) |
 
-**Overdue Logic:**
-A task is considered overdue if:
-- The due date has passed
-- Status is `"planned"` or `"in progress"`
-- Status is NOT `"in review"`
+## Pattern Detection Logic
 
+| Pattern | Trigger Condition |
+|---------|-------------------|
+| `rushing` | Productivity > 65% AND Quality < 50% |
+| `quality_decline` | Quality < 45% |
+| `planning_issue` | Overdue rate > 30% |
+| `performance_instability` | All three metrics < 50% |
+| `inconsistent_sprinter` | Consistency < 40% AND Productivity > 60% |
+| `high_performer` | All three metrics > 70% |
+| `balanced` | No issues detected |
 
+## Test Payloads
 
-## 🤖 Training Models
-
-If you need to retrain the ML models:
-
-1. Ensure `tasks_export.xlsx` contains your training data with columns:
-   - `User Role`, `Status`, `Due Date`, `Submitted At`, `Approved At`
-   - `Approval Status`, `Working Count`
-
-2. Run the training script:
-```bash
-python train_model.py
+### High Performer
+```json
+{
+  "user_id": "user001",
+  "current_score": 92.0,
+  "previous_score": 88.0,
+  "performance_band": "Excellent",
+  "weekly_history": [],
+  "productivity": 85.0,
+  "consistency": 80.0,
+  "quality": 90.0,
+  "overdue_rate": 5.0
+}
 ```
 
-This will generate:
-- `app/staff_model.pkl` - Staff performance anomaly detection model
-- `app/supervisor_model.pkl` - Supervisor performance anomaly detection model
-
-
-
-**Memory Requirements:**
-- Minimum: 2GB RAM (for FLAN-T5 model)
-- Recommended: 4GB+ RAM
-
-## 🔍 How It Works
-
-1. **Data Analysis**: Receives task data and calculates metrics:
-   - Completion rate
-   - Overdue rate (based on due dates and status)
-   - Average working logs
-   - Approval speed (for supervisors)
-   - Rejection rate (for supervisors)
-
-2. **ML Pattern Detection**: Uses IsolationForest models to detect anomaly patterns in performance data
-
-3. **Score Calculation**: Combines ML anomaly scores with behavioral metrics to generate a 0-100 efficiency score
-
-4. **Risk Assessment**: Determines risk level based on model predictions and efficiency score
-
-5. **AI Feedback Generation**: Uses FLAN-T5 to generate personalized coaching feedback based on the analysis
-
-## 🧪 Testing
-
-Test the API using the interactive docs at `http://localhost:8000/docs` or with curl:
-
-```bash
-curl -X POST http://localhost:8000/analyze \
-  -H "Content-Type: application/json" \
-  -d '{
-    "user_id": "test_user",
-    "user_role": "staff",
-    "tasks": [
-      {
-        "task_id": "1",
-        "user_id": "test_user",
-        "user_role": "staff",
-        "status": "completed",
-        "priority": 1,
-        "approval_status": "approved",
-        "working_count": 3,
-        "due_date": "2024-01-15T00:00:00.000Z"
-      }
-    ]
-  }'
+### Struggling Employee
+```json
+{
+  "user_id": "user002",
+  "current_score": 38.0,
+  "previous_score": 45.0,
+  "performance_band": "Needs Attention",
+  "weekly_history": [],
+  "productivity": 40.0,
+  "consistency": 35.0,
+  "quality": 42.0,
+  "overdue_rate": 45.0
+}
 ```
 
-## 📝 Notes
+### Rushing Pattern
+```json
+{
+  "user_id": "user003",
+  "current_score": 55.0,
+  "previous_score": 58.0,
+  "performance_band": "Average",
+  "weekly_history": [],
+  "productivity": 85.0,
+  "consistency": 60.0,
+  "quality": 40.0,
+  "overdue_rate": 20.0
+}
+```
 
-- The FLAN-T5 model is loaded on server startup and kept in memory
-- First API call may be slower due to model initialization
-- Model files (`.pkl`) should be committed to the repository
-- CORS is currently set to allow all origins (`*`) 
+## Tech Stack
 
+- **FastAPI** - Web framework
+- **Uvicorn** - ASGI server
+- **PyTorch** - ML framework
+- **Transformers** - Hugging Face library
+- **FLAN-T5 Small** - Google's instruction-tuned model (~300MB)
+- **Pydantic** - Data validation
+
+## Notes
+
+- First startup downloads the FLAN-T5 model (~300MB) and takes ~30 seconds
+- Model is loaded in background thread so server starts immediately
+- Server runs on port 8000 by default
+- All print statements use ASCII-safe characters for Windows compatibility
