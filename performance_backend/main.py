@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from routes.analyze_performance import router
-import generator
+from performance_backend.routes.analyze_performance import router
+from performance_backend import generator
 
 # Flag to track model status
 model_ready = False

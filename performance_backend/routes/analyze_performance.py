@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Optional
-from generator import generate_flan_sentence
+from performance_backend.generator import generate_flan_sentence
 
 router = APIRouter()
 
