@@ -59,6 +59,64 @@ python test_endpoint.py
 
 ## API Reference
 
+### Real-Time Monitoring Endpoints
+
+#### POST `/monitor-task-update`
+
+Real-time monitoring endpoint that tracks user task patterns and provides feedback suggestions.
+
+**Request:**
+```json
+{
+  "user_id": "string",
+  "task_count": 2,
+  "timestamp": "2024-01-15T10:00:00Z"  // Optional
+}
+```
+
+**Response:**
+```json
+{
+  "pattern_count": 2,
+  "current_pattern": "stable",
+  "current_task_count": 2,
+  "feedback_suggestion": "You were doing 2 tasks consistently, but now you're increasing your workload. This shows growth, but make sure to maintain quality as you take on more."
+}
+```
+
+**Pattern Types:**
+- `stable` - Task count remains consistent (within 1-2 tasks)
+- `increasing` - Task count is consistently increasing
+- `decreasing` - Task count is consistently decreasing
+- `fluctuating` - Task count varies without clear pattern
+
+**How it works:**
+- Tracks user task completion patterns over time
+- Detects when users maintain consistent patterns (e.g., "doing 2 tasks consistently")
+- Provides feedback when patterns change (e.g., "you were doing 2 tasks consistently but now you do this...")
+- Returns a pattern count (number of periods with the same pattern) and AI-generated feedback
+
+#### GET `/monitor-status/{user_id}`
+
+Get current monitoring status and feedback for a user.
+
+**Response:**
+```json
+{
+  "pattern_count": 3,
+  "current_pattern": "stable",
+  "current_task_count": 2,
+  "feedback_suggestion": "You've maintained a consistent pattern for 3 periods, doing around 2 tasks. This consistency is a strength - keep it up!",
+  "pattern_history": [
+    {
+      "pattern": "stable",
+      "count": 2,
+      "task_count": 2
+    }
+  ]
+}
+```
+
 ### POST `/analyze-performance`
 
 **Request:**

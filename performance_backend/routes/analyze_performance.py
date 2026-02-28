@@ -145,14 +145,24 @@ def generate_feedback(data: PerformanceRequest, trend: str, patterns: List[str],
     
     fallback = fallback_map.get(primary_pattern, "Every week is a fresh opportunity to build momentum. Small improvements compound over time.")
     
-    # Build prompt for FLAN
-    pattern_display = primary_pattern.replace("_", " ")
+    # Pattern display map for human-readable pattern keys
+    pattern_display_map = {
+        "rushing":         "completing tasks too quickly with low quality",
+        "quality_decline": "declining work quality over time",
+        "planning_issue":  "starting tasks late or missing planned dates",
+        "overdue_tasks":   "having multiple overdue tasks",
+        "inconsistent":    "inconsistent daily work patterns",
+        "high_performer":  "consistently strong performance across all areas",
+    }
+    pattern_display = pattern_display_map.get(primary_pattern, primary_pattern.replace("_", " ").title())
+    
+    # Build improved prompt for FLAN-T5 (instruction-tuned model works better with clear instructions)
     prompt = (
-        f"A staff member scored {score}% this week. "
+        f"Write a professional performance feedback sentence for an employee. "
+        f"Score: {score}. Trend: {trend}. Pattern: {pattern_display}. "
         f"Productivity: {p}%, Quality: {q}%, Consistency: {c}%. "
-        f"Performance pattern: {pattern_display}. "
-        f"Trend: {trend}. "
-        f"Write one supportive and specific coaching sentence for them."
+        f"Mention their strongest metric, address their weakest area, and suggest one improvement. "
+        f"Use 'you'. Be specific, professional, and encouraging."
     )
     
     supportive_interpretation = generate_flan_sentence(prompt, fallback)

@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from performance_backend.routes.analyze_performance import router
+from performance_backend.routes.insights import router as insights_router
 from performance_backend import generator
 
 # Flag to track model status
@@ -28,30 +28,21 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Register router
-app.include_router(router)
+# Register routers
+app.include_router(insights_router)
 
 # Health check route
 @app.get("/")
 def health_check():
     return {
         "status": "ok",
-        "model_ready": model_ready
-    }
-
-# Model status endpoint
-@app.get("/status")
-def model_status():
-    if not model_ready:
-        raise HTTPException(status_code=503, detail="Model is still loading, please wait...")
-    return {
-        "status": "ready",
-        "model": "flan-t5-base",
-        "message": "API is ready to accept requests"
+        "model_ready": model_ready,
+        "message": "API is ready to accept requests" if model_ready else "Model is loading..."
     }
 
 if __name__ == "__main__":

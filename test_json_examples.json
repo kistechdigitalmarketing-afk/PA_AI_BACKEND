@@ -1,0 +1,199 @@
+{
+  "swagger_test_examples": {
+    "example_1_good_performer": {
+      "user_name": "John Doe",
+      "performance_score": 82.5,
+      "leadership_score": 75.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 42.0
+      },
+      "weekly_avg_score": 78.0,
+      "current_week_score": 82.5,
+      "weekly_history": [
+        {"week": "Week 1", "score": 75.0},
+        {"week": "Week 2", "score": 78.0},
+        {"week": "Week 3", "score": 82.5}
+      ],
+      "productivity": 85.0,
+      "quality": 80.0,
+      "consistency": 75.0,
+      "tasks": {
+        "planned": 10,
+        "completed": 8,
+        "in_progress": 2,
+        "in_review": 1,
+        "overdue": 0
+      },
+      "weaker_areas": []
+    },
+    "example_2_average_performer": {
+      "user_name": "Jane Smith",
+      "performance_score": 65.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 38.0
+      },
+      "weekly_avg_score": 68.0,
+      "current_week_score": 65.0,
+      "weekly_history": [],
+      "productivity": 75.0,
+      "quality": 45.0,
+      "consistency": 60.0,
+      "tasks": {
+        "planned": 12,
+        "completed": 7,
+        "in_progress": 3,
+        "in_review": 1,
+        "overdue": 2
+      },
+      "weaker_areas": ["quality", "time_management"]
+    },
+    "example_3_high_performer": {
+      "user_name": "Alice Johnson",
+      "performance_score": 95.0,
+      "leadership_score": 90.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 41.0
+      },
+      "weekly_avg_score": 92.0,
+      "current_week_score": 95.0,
+      "weekly_history": [
+        {"week": "Week 1", "score": 90.0},
+        {"week": "Week 2", "score": 92.0}
+      ],
+      "productivity": 90.0,
+      "quality": 95.0,
+      "consistency": 85.0,
+      "tasks": {
+        "planned": 15,
+        "completed": 14,
+        "in_progress": 1,
+        "in_review": 0,
+        "overdue": 0
+      },
+      "weaker_areas": []
+    },
+    "example_4_needs_attention": {
+      "user_name": "Bob Williams",
+      "performance_score": 40.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 35.0
+      },
+      "weekly_avg_score": 45.0,
+      "current_week_score": 40.0,
+      "weekly_history": [],
+      "productivity": 45.0,
+      "quality": 40.0,
+      "consistency": 35.0,
+      "tasks": {
+        "planned": 8,
+        "completed": 3,
+        "in_progress": 2,
+        "in_review": 1,
+        "overdue": 3
+      },
+      "weaker_areas": ["productivity", "quality", "consistency", "time_management"]
+    },
+    "example_5_minimal_data": {
+      "user_name": "Charlie Brown",
+      "performance_score": 70.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 40.0
+      },
+      "tasks": {
+        "planned": 10,
+        "completed": 7,
+        "in_progress": 2,
+        "in_review": 1,
+        "overdue": 1
+      }
+    },
+    "example_6_improving_trend": {
+      "user_name": "Sarah Connor",
+      "performance_score": 78.0,
+      "leadership_score": 70.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 41.5
+      },
+      "weekly_avg_score": 72.0,
+      "current_week_score": 78.0,
+      "weekly_history": [
+        {"week": "Week 1", "score": 68.0},
+        {"week": "Week 2", "score": 72.0},
+        {"week": "Week 3", "score": 75.0},
+        {"week": "Week 4", "score": 78.0}
+      ],
+      "productivity": 80.0,
+      "quality": 75.0,
+      "consistency": 78.0,
+      "tasks": {
+        "planned": 11,
+        "completed": 9,
+        "in_progress": 1,
+        "in_review": 1,
+        "overdue": 0
+      },
+      "weaker_areas": []
+    },
+    "example_7_declining_trend": {
+      "user_name": "Mike Johnson",
+      "performance_score": 58.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 36.0
+      },
+      "weekly_avg_score": 65.0,
+      "current_week_score": 58.0,
+      "weekly_history": [
+        {"week": "Week 1", "score": 70.0},
+        {"week": "Week 2", "score": 68.0},
+        {"week": "Week 3", "score": 62.0},
+        {"week": "Week 4", "score": 58.0}
+      ],
+      "productivity": 60.0,
+      "quality": 55.0,
+      "consistency": 58.0,
+      "tasks": {
+        "planned": 9,
+        "completed": 5,
+        "in_progress": 2,
+        "in_review": 1,
+        "overdue": 2
+      },
+      "weaker_areas": ["consistency", "time_management"]
+    },
+    "example_8_perfect_pipeline": {
+      "user_name": "Emma Watson",
+      "performance_score": 88.0,
+      "leadership_score": 85.0,
+      "time": {
+        "required_hours": 40.0,
+        "worked_hours": 40.0
+      },
+      "weekly_avg_score": 86.0,
+      "current_week_score": 88.0,
+      "productivity": 90.0,
+      "quality": 88.0,
+      "consistency": 85.0,
+      "tasks": {
+        "planned": 12,
+        "completed": 12,
+        "in_progress": 0,
+        "in_review": 0,
+        "overdue": 0
+      },
+      "weaker_areas": []
+    }
+  },
+  "quick_copy_examples": {
+    "good_performer": "{\"user_name\": \"John Doe\", \"performance_score\": 82.5, \"leadership_score\": 75.0, \"time\": {\"required_hours\": 40.0, \"worked_hours\": 42.0}, \"weekly_avg_score\": 78.0, \"current_week_score\": 82.5, \"weekly_history\": [{\"week\": \"Week 1\", \"score\": 75.0}, {\"week\": \"Week 2\", \"score\": 78.0}, {\"week\": \"Week 3\", \"score\": 82.5}], \"productivity\": 85.0, \"quality\": 80.0, \"consistency\": 75.0, \"tasks\": {\"planned\": 10, \"completed\": 8, \"in_progress\": 2, \"in_review\": 1, \"overdue\": 0}, \"weaker_areas\": []}",
+    "average_performer": "{\"user_name\": \"Jane Smith\", \"performance_score\": 65.0, \"time\": {\"required_hours\": 40.0, \"worked_hours\": 38.0}, \"weekly_avg_score\": 68.0, \"current_week_score\": 65.0, \"productivity\": 75.0, \"quality\": 45.0, \"consistency\": 60.0, \"tasks\": {\"planned\": 12, \"completed\": 7, \"in_progress\": 3, \"in_review\": 1, \"overdue\": 2}, \"weaker_areas\": [\"quality\", \"time_management\"]}",
+    "needs_attention": "{\"user_name\": \"Bob Williams\", \"performance_score\": 40.0, \"time\": {\"required_hours\": 40.0, \"worked_hours\": 35.0}, \"weekly_avg_score\": 45.0, \"current_week_score\": 40.0, \"productivity\": 45.0, \"quality\": 40.0, \"consistency\": 35.0, \"tasks\": {\"planned\": 8, \"completed\": 3, \"in_progress\": 2, \"in_review\": 1, \"overdue\": 3}, \"weaker_areas\": [\"productivity\", \"quality\", \"consistency\", \"time_management\"]}",
+    "minimal": "{\"user_name\": \"Charlie Brown\", \"performance_score\": 70.0, \"time\": {\"required_hours\": 40.0, \"worked_hours\": 40.0}, \"tasks\": {\"planned\": 10, \"completed\": 7, \"in_progress\": 2, \"in_review\": 1, \"overdue\": 1}}"
+  }
+}

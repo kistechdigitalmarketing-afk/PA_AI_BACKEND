@@ -48,6 +48,7 @@ def generate_flan_sentence(prompt: str, fallback: str) -> str:
             )
         
         output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        print(f"[DEBUG] AI generated: {output_text[:100]}...")  # Log first 100 chars
         
         # Quality checks - return fallback if any check fails
         output_lower = output_text.lower()
@@ -65,40 +66,35 @@ def generate_flan_sentence(prompt: str, fallback: str) -> str:
             return fallback
         
         # Check 4: Contains impersonal references (should address "you" not "they/team/staff")
-        impersonal_words = ["staff member", "the team", "the manager", "the employee", "they ", "he ", "she "]
-        if any(word in output_lower for word in impersonal_words):
+        # Only reject if it's clearly impersonal (not just containing the word)
+        impersonal_phrases = ["the staff member", "the team should", "the manager", "the employee", "they should", "he should", "she should"]
+        if any(phrase in output_lower for phrase in impersonal_phrases):
             return fallback
         
-        # Check 5: Output just states the score (not coaching)
-        if "scored" in output_lower or "score" in output_lower:
-            return fallback
-        
-        # Check 6: Output is too generic (contains common filler phrases)
-        generic_phrases = [
-            "overall performance",
-            "solid performance", 
-            "good performance",
-            "great contribution",
-            "very good",
-            "had been",
-            "the coach",
-            "well done",
-            "keep up",
-            "great job",
-            "good job",
-            "nice work",
-            "made a",
-            "has made",
-            "have made"
+        # Check 5: Output is too generic (contains only generic filler phrases without substance)
+        # Only reject if it's overly generic - allow some generic phrases if there's substance
+        overly_generic_phrases = [
+            "well done keep up",
+            "great job keep it up",
+            "good job continue",
+            "nice work keep going"
         ]
-        if any(phrase in output_lower for phrase in generic_phrases):
+        if any(phrase in output_lower for phrase in overly_generic_phrases):
             return fallback
         
-        # Check 7: Must contain actionable/coaching language
-        coaching_indicators = ["focus", "try", "consider", "aim", "work on", "improve", "build", "develop", "prioritize", "start", "continue", "maintain"]
-        if not any(word in output_lower for word in coaching_indicators):
+        # Check 6: Must be substantive (not just a single generic phrase)
+        # Check if output has meaningful content beyond just generic praise
+        meaningful_indicators = [
+            "focus", "try", "consider", "aim", "work on", "improve", "build", "develop", 
+            "prioritize", "start", "continue", "maintain", "adjust", "help", "support",
+            "opportunity", "challenge", "situation", "pattern", "effort", "attention",
+            "momentum", "foundation", "discipline", "habits", "pace", "energy"
+        ]
+        if not any(word in output_lower for word in meaningful_indicators):
+            print(f"[DEBUG] AI output rejected: missing meaningful indicators")
             return fallback
         
+        print(f"[DEBUG] AI output accepted: {output_text}")
         return output_text
     
     except Exception as e:

@@ -1,0 +1,32 @@
+{
+  "analyze_performance_example_1": {
+    "user_id": "user123",
+    "current_score": 82.5,
+    "previous_score": 78.0,
+    "performance_band": "Very Good",
+    "weekly_history": [
+      {"week": "Week 1", "score": 75.0},
+      {"week": "Week 2", "score": 78.0},
+      {"week": "Week 3", "score": 82.5}
+    ],
+    "productivity": 85.0,
+    "quality": 80.0,
+    "consistency": 75.0,
+    "overdue_rate": 10.0
+  },
+  "analyze_performance_example_2": {
+    "user_id": "user456",
+    "current_score": 65.0,
+    "previous_score": 70.0,
+    "performance_band": "Average",
+    "weekly_history": [],
+    "productivity": 75.0,
+    "quality": 45.0,
+    "consistency": 60.0,
+    "overdue_rate": 20.0
+  },
+  "monitor_task_update_example": {
+    "user_id": "test_user",
+    "task_count": 2
+  }
+}
